@@ -1,6 +1,6 @@
 # story_board
 
-A new Flutter project.
+StoryBoard is an APP where user can add images, add text on it and can also add tags too.
 
 ## Getting Started
 
