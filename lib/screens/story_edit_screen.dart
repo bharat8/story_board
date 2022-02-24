@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:provider/provider.dart';
 import 'package:story_board/providers/story_board_provider.dart';
+import 'package:story_board/screens/tag_people_screen.dart';
 import 'package:story_board/widgets/app_bar_back_button.dart';
 import 'package:story_board/widgets/app_bar_icon_button.dart';
 import 'package:story_board/widgets/image_interactive_class.dart';
@@ -21,26 +22,23 @@ class StoryEditScreen extends StatefulWidget {
 class _StoryEditScreenState extends State<StoryEditScreen> {
   late TextEditingController _storyTextController;
   late FocusNode _textFocus;
-  late TextEditingController _tagTextController;
-  late FocusNode _tagFocus;
   late StreamSubscription<bool> keyboardSubscription;
 
   @override
   void initState() {
     _storyTextController = TextEditingController();
     _textFocus = FocusNode();
-    _tagTextController = TextEditingController();
-    _tagFocus = FocusNode();
     var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardSubscription =
         keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible) {
         _textFocus.unfocus();
-        _tagFocus.unfocus();
         widget.storyProv.setTextEnabled(false);
         widget.storyProv.setIsTagsButtonTapped(false);
       }
     });
+
+    widget.storyProv.defaults(MediaQueryData.fromWindow(window).size);
 
     super.initState();
   }
@@ -71,11 +69,10 @@ class _StoryEditScreenState extends State<StoryEditScreen> {
                     children: [
                       //Image Selected
                       ImageInteractiveClass(
-                          constraints: constraints,
-                          storyTextController: _storyTextController,
-                          tagTextController: _tagTextController,
-                          textFocus: _textFocus,
-                          tagFocus: _tagFocus),
+                        constraints: constraints,
+                        storyTextController: _storyTextController,
+                        textFocus: _textFocus,
+                      ),
 
                       //App Bar With Controls
                       Container(
@@ -104,8 +101,12 @@ class _StoryEditScreenState extends State<StoryEditScreen> {
                               constraints: constraints,
                               icon: Icons.person_pin_circle_rounded,
                               onTap: () {
-                                widget.storyProv.setIsTagsButtonTapped(true);
-                                _tagFocus.requestFocus();
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => TagPeopleScreen(
+                                      storyProv: widget.storyProv),
+                                ));
+                                // widget.storyProv.setIsTagsButtonTapped(true);
+                                // _tagFocus.requestFocus();
                               },
                             ),
                             AppBarIconButton(
@@ -119,8 +120,7 @@ class _StoryEditScreenState extends State<StoryEditScreen> {
                             InkWell(
                               onTap: () {
                                 Navigator.pop(context);
-                                widget.storyProv.onDonePressed(
-                                    MediaQueryData.fromWindow(window).size);
+                                widget.storyProv.onDonePressed();
                               },
                               child: Text(
                                 "Done",

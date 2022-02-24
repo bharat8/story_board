@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:story_board/models/friends_list_model.dart';
+import 'package:story_board/models/selected_friend_model.dart';
 import 'package:story_board/models/story_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -11,27 +13,57 @@ class StoryBoardProvider extends ChangeNotifier {
   late bool _isFontSizeTapped;
   late double _currentSliderVal;
   late bool _isTagsButtonTapped;
-  List<String> friendsList = [
-    "Bharat Sundal",
-    "Aakash Bhadana",
-    "Vasu Kaushik",
-    "Sapan Shah",
-    "Amr Badr",
-    "Mudit Agarwala",
-    "Shubham Baldawa",
-    "Pavneet Kohli",
-    "Tanya Dewan",
-    "Shubhi Saxena",
-    "Khushboo Verma",
-    "Nishtha Singh",
-    "Aishwarya Saxena",
-    "Serena N",
-    "Karan Arora",
-    "Seema Mohan",
+  List<FriendsListModel> friendsList = [
+    FriendsListModel(firstAlphabet: "B", name: "Bharat Sundal"),
+    FriendsListModel(firstAlphabet: "A", name: "Aakash Bhadana"),
+    FriendsListModel(firstAlphabet: "V", name: "Vasu Kaushik"),
+    FriendsListModel(firstAlphabet: "S", name: "Sapan Shah"),
+    FriendsListModel(firstAlphabet: "A", name: "Amr Badr"),
+    FriendsListModel(firstAlphabet: "M", name: "Mudit Agarwala"),
+    FriendsListModel(firstAlphabet: "S", name: "Shubham Baldawa"),
+    FriendsListModel(firstAlphabet: "P", name: "Pavneet Kohli"),
+    FriendsListModel(firstAlphabet: "T", name: "Tanya Dewan"),
+    FriendsListModel(firstAlphabet: "S", name: "Shubhi Saxena"),
+    FriendsListModel(firstAlphabet: "K", name: "Khushboo Verma"),
+    FriendsListModel(firstAlphabet: "N", name: "Nishtha Singh"),
+    FriendsListModel(firstAlphabet: "A", name: "Aishwarya Saxena"),
+    FriendsListModel(firstAlphabet: "S", name: "Serena N"),
+    FriendsListModel(firstAlphabet: "K", name: "Karan Arora"),
+    FriendsListModel(firstAlphabet: "S", name: "Seema Mohan"),
   ];
   late bool _isTagsListTapped;
   late List<String> _filteredList;
-  late List<String> _selectedFriendsList;
+  late List<SelectedTagModel> _selectedFriendsList;
+  late Offset _tappedOffset;
+
+  final List<String> alphabetsList = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+  ];
 
   List<StoryModel> get getStoriesList => _storiesList;
 
@@ -49,9 +81,11 @@ class StoryBoardProvider extends ChangeNotifier {
 
   bool get isTagsListTapped => _isTagsListTapped;
 
-  List<String> get selectedFriendsList => _selectedFriendsList;
+  List<SelectedTagModel> get selectedFriendsList => _selectedFriendsList;
 
   List<String> get filteredList => _filteredList;
+
+  Offset get tappedOffset => _tappedOffset;
 
   StoryBoardProvider(Size size) {
     defaults(size);
@@ -97,8 +131,13 @@ class StoryBoardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  addToSelectedList(String name) {
-    _selectedFriendsList.add(name);
+  addToSelectedList(SelectedTagModel tagModel) {
+    _selectedFriendsList.add(tagModel);
+    notifyListeners();
+  }
+
+  setTappedOffset(Offset val) {
+    _tappedOffset = val;
     notifyListeners();
   }
 
@@ -117,9 +156,11 @@ class StoryBoardProvider extends ChangeNotifier {
 
   onTagSearched(String val) {
     List<String> tempList = [];
-    for (var i = 0; i < friendsList.length; i++) {
-      if (friendsList[i].toLowerCase().startsWith(val.toLowerCase())) {
-        tempList.add(friendsList[i]);
+    if (val.isNotEmpty) {
+      for (var i = 0; i < friendsList.length; i++) {
+        if (friendsList[i].name.toLowerCase().startsWith(val.toLowerCase())) {
+          tempList.add(friendsList[i].name);
+        }
       }
     }
     _filteredList = tempList;
@@ -127,12 +168,13 @@ class StoryBoardProvider extends ChangeNotifier {
   }
 
   onTextSubmitted(String val) {
-    addToSelectedList(val);
+    addToSelectedList(
+        SelectedTagModel(tagPosition: _tappedOffset, tagName: val));
     _filteredList = [];
     notifyListeners();
   }
 
-  onDonePressed(Size size) {
+  onDonePressed() {
     if (_currentStory != null) {
       StoryModel model = StoryModel(
         imageId: _currentStory!.imageId,
@@ -141,7 +183,6 @@ class StoryBoardProvider extends ChangeNotifier {
       );
       addStoriesToList(model);
     }
-    defaults(size);
   }
 
   defaults(Size size) {
@@ -154,5 +195,7 @@ class StoryBoardProvider extends ChangeNotifier {
     _isTagsListTapped = false;
     _selectedFriendsList = [];
     _filteredList = [];
+    _tappedOffset = Offset.zero;
+    friendsList.sort((a, b) => a.firstAlphabet.compareTo(b.firstAlphabet));
   }
 }

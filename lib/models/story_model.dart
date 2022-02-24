@@ -1,7 +1,9 @@
+import 'package:story_board/models/selected_friend_model.dart';
+
 class StoryModel {
   final String imageId;
   final String imageLocation;
-  final List<String> imageTags;
+  final List<SelectedTagModel> imageTags;
 
   StoryModel({
     required this.imageId,

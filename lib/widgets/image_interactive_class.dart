@@ -8,16 +8,12 @@ import 'package:story_board/widgets/text_format_and_tags_controls.dart';
 class ImageInteractiveClass extends StatelessWidget {
   final BoxConstraints constraints;
   final TextEditingController storyTextController;
-  final TextEditingController tagTextController;
   final FocusNode textFocus;
-  final FocusNode tagFocus;
   const ImageInteractiveClass({
     Key? key,
     required this.constraints,
     required this.storyTextController,
-    required this.tagTextController,
     required this.textFocus,
-    required this.tagFocus,
   }) : super(key: key);
 
   @override
@@ -108,94 +104,52 @@ class ImageInteractiveClass extends StatelessWidget {
                   ),
                 ),
 
-              // Tags view and edit Controls
-              if (storyProv.isTagsButtonTapped)
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: constraints.maxWidth * 0.8,
-                        child: TextField(
-                          controller: tagTextController,
-                          focusNode: tagFocus,
-                          decoration:
-                              const InputDecoration.collapsed(hintText: ""),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                          onChanged: (value) {
-                            storyProv.onTagSearched(value);
-                          },
-                          onSubmitted: (value) {
-                            storyProv.onTextSubmitted(value);
-                            tagTextController.text = "";
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: constraints.maxHeight * 0.04,
-                      ),
-                      Container(
-                        width: constraints.maxWidth * 0.9,
-                        height: constraints.maxHeight * 0.08,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: constraints.maxWidth * 0.02,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[200],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: CustomScrollView(
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          slivers: [
-                            SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                return Center(
-                                  child: InkWell(
-                                    onTap: () {
-                                      tagTextController.text =
-                                          storyProv.filteredList.isEmpty
-                                              ? storyProv.friendsList[index]
-                                              : storyProv.filteredList[index];
-                                      tagTextController.selection =
-                                          TextSelection.fromPosition(
-                                              TextPosition(
-                                                  offset: tagTextController
-                                                      .text.length));
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.only(right: 10),
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Text(
-                                        storyProv.filteredList.isEmpty
-                                            ? storyProv.friendsList[index]
-                                            : storyProv.filteredList[index],
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.black,
-                                        ),
-                                      ),
+              if (storyProv.selectedFriendsList.isNotEmpty &&
+                  storyProv.isTagsListTapped)
+                Container(
+                  height: constraints.maxHeight * 0.93,
+                  width: constraints.maxWidth,
+                  margin: EdgeInsets.only(
+                    top: constraints.maxHeight * 0.07,
+                  ),
+                  child: Stack(
+                    children: storyProv.selectedFriendsList
+                        .map<Widget>((e) => Positioned(
+                            left: e.tagPosition.dx -
+                                (constraints.maxWidth * 0.25),
+                            top: e.tagPosition.dy -
+                                (constraints.maxHeight * 0.07 * 2),
+                            child: SizedBox(
+                              height: constraints.maxHeight * 0.07,
+                              width: constraints.maxWidth * 0.5,
+                              child: Column(
+                                children: [
+                                  const Expanded(
+                                    child: Icon(
+                                      Icons.person_pin_circle_rounded,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                );
-                              },
-                              childCount: storyProv.filteredList.isEmpty
-                                  ? storyProv.friendsList.length
-                                  : storyProv.filteredList.length,
-                            ))
-                          ],
-                        ),
-                      )
-                    ],
+                                  Expanded(
+                                    child: Text(
+                                      e.tagName,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                        shadows: [
+                                          Shadow(
+                                            color: Colors.black26,
+                                            offset: Offset(1, 1),
+                                            blurRadius: 6,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )))
+                        .toList(),
                   ),
                 ),
 
