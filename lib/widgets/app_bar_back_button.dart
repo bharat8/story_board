@@ -18,14 +18,20 @@ class AppBarBackButton extends StatelessWidget {
           SizedBox(
             width: constraints.maxWidth * 0.04,
             child: const FittedBox(
-              child: Icon(Icons.arrow_back_ios),
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
               fit: BoxFit.contain,
               alignment: Alignment.center,
             ),
           ),
           Text(
             "Back",
-            style: TextStyle(fontSize: constraints.maxHeight * 0.02),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: constraints.maxHeight * 0.02,
+            ),
           ),
         ],
       ),

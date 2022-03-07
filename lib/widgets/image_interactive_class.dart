@@ -25,13 +25,13 @@ class ImageInteractiveClass extends StatelessWidget {
             children: [
               // Image with interactivity
               Container(
-                height: constraints.maxHeight * 0.93,
+                height: constraints.maxHeight,
                 width: constraints.maxWidth,
-                margin: EdgeInsets.only(
-                  top: constraints.maxHeight * 0.07,
-                ),
                 color: Colors.white,
                 child: InteractiveViewer(
+                  maxScale: 10,
+                  minScale: 0.1,
+                  boundaryMargin: EdgeInsets.all(double.infinity),
                   child: Image.file(
                     File(storyProv.currentStory!.imageLocation),
                     fit: BoxFit.cover,

@@ -75,59 +75,60 @@ class _StoryEditScreenState extends State<StoryEditScreen> {
                       ),
 
                       //App Bar With Controls
-                      Container(
-                        height: constraints.maxHeight * 0.07,
-                        width: constraints.maxWidth,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.5),
-                            boxShadow: const [
-                              BoxShadow(
-                                  blurRadius: 1,
-                                  color: Colors.black12,
-                                  offset: Offset(0, 1),
-                                  spreadRadius: 1)
-                            ]),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                        child: Row(
-                          children: [
-                            AppBarBackButton(
-                              constraints: constraints,
+                      ClipRect(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          child: Container(
+                            height: constraints.maxHeight * 0.07,
+                            width: constraints.maxWidth,
+                            color: Colors.blue[200]!.withOpacity(0.4),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.04),
+                            child: Row(
+                              children: [
+                                AppBarBackButton(
+                                  constraints: constraints,
+                                ),
+                                const Spacer(
+                                  flex: 1,
+                                ),
+                                AppBarIconButton(
+                                  constraints: constraints,
+                                  icon: Icons.person_pin_circle_rounded,
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => TagPeopleScreen(
+                                          storyProv: widget.storyProv),
+                                    ));
+                                    // widget.storyProv.setIsTagsButtonTapped(true);
+                                    // _tagFocus.requestFocus();
+                                  },
+                                ),
+                                AppBarIconButton(
+                                  constraints: constraints,
+                                  icon: Icons.text_fields_rounded,
+                                  onTap: () {
+                                    widget.storyProv.setTextEnabled(true);
+                                    _textFocus.requestFocus();
+                                  },
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    widget.storyProv.onDonePressed();
+                                  },
+                                  child: Text(
+                                    "Done",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: size.height * 0.02,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                            const Spacer(
-                              flex: 1,
-                            ),
-                            AppBarIconButton(
-                              constraints: constraints,
-                              icon: Icons.person_pin_circle_rounded,
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => TagPeopleScreen(
-                                      storyProv: widget.storyProv),
-                                ));
-                                // widget.storyProv.setIsTagsButtonTapped(true);
-                                // _tagFocus.requestFocus();
-                              },
-                            ),
-                            AppBarIconButton(
-                              constraints: constraints,
-                              icon: Icons.text_fields_rounded,
-                              onTap: () {
-                                widget.storyProv.setTextEnabled(true);
-                                _textFocus.requestFocus();
-                              },
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                                widget.storyProv.onDonePressed();
-                              },
-                              child: Text(
-                                "Done",
-                                style: TextStyle(fontSize: size.height * 0.02),
-                              ),
-                            )
-                          ],
+                          ),
                         ),
                       ),
                     ],

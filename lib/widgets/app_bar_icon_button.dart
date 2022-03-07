@@ -26,7 +26,7 @@ class AppBarIconButton extends StatelessWidget {
         child: FittedBox(
           child: Icon(
             icon,
-            color: Colors.black.withOpacity(0.7),
+            color: Colors.white,
           ),
           fit: BoxFit.contain,
           alignment: Alignment.center,
